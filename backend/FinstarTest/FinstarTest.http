@@ -1,0 +1,6 @@
+@FinstarTest_HostAddress = http://localhost:5014
+
+GET {{FinstarTest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
