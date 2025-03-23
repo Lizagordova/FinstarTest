@@ -1,6 +1,7 @@
 using Finstar.Domain;
 using Finstar.Infrastructure;
 using Finstar.Services;
+using FinstarTest.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IItemsRepository, ItemsRepository>();
 builder.Services.AddScoped<IItemsEditorService, ItemsEditorService>();
 builder.Services.AddScoped<IItemsReaderService, ItemsReaderService>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(

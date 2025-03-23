@@ -13,9 +13,9 @@ namespace Finstar.Services
             _itemsRepository = itemsRepository;
         }
 
-        public IEnumerable<Item> GetItems()
+        public IList<Item> GetItems(ItemQueryOptions options)
         {
-            throw new System.NotImplementedException();
+            return _itemsRepository.GetItems(options);
         }
     }
 }

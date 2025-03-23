@@ -1,4 +1,8 @@
-﻿using Finstar.Domain;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Finstar.Domain;
+using Finstar.Domain.Models;
 
 namespace Finstar.Services
 {
@@ -10,10 +14,17 @@ namespace Finstar.Services
         {
             _itemsRepository = itemsRepository;
         }
-        public void SaveItems()
+
+        public void SaveItems(Dictionary<int, string> items)
         {
-            // сделать очистку базу
-            // сохранение данные  в бд
+            var sortedDict = items.OrderBy(pair => pair.Key);
+            var itemList = sortedDict.Select((pair, index) => new Item
+            {
+                Id = index + 1,
+                Code = pair.Key,
+                Value = pair.Value
+            });
+            _itemsRepository.SaveItems(itemList);
         }
     }
 }

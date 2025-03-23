@@ -5,6 +5,6 @@ namespace Finstar.Services
 {
     public interface IItemsReaderService
     {
-        IEnumerable<Item> GetItems();
+        IList<Item> GetItems(ItemQueryOptions options);
     }
 }

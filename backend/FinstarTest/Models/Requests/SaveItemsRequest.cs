@@ -4,6 +4,6 @@ namespace FinstarTest.Models.Requests
 {   
     public class SaveItemsRequest
     {
-        public Dictionary<int, string> Data { get; }
+        public Dictionary<int, string> Data { get; set; }
     }
 }
