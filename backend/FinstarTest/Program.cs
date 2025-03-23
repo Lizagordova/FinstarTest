@@ -2,7 +2,11 @@ using Finstar.Domain;
 using Finstar.Infrastructure;
 using Finstar.Services;
 using FinstarTest.Mappings;
-
+using RoundHouse;
+var config = new RoundhouseConfig("roundhouse.config");
+var migrator = new Migrator(config);
+migrator.Run();
+return;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

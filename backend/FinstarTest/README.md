@@ -1,0 +1,1 @@
+rh --connectionstring=""Data Source=localhost;Initial Catalog=Finstar;Integrated Security=True;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;Integrated Security=True;" --sqlfilesdirectory="D:\Study_yp\Подготовка к собесам 2\Finstar_Test\backend\Finstar.Infrastructure\Migrations"
