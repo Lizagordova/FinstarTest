@@ -31,7 +31,14 @@ namespace Finstar.Infrastructure
             using var connection =
                 new SqlConnection(ConnectionString);
             connection.Open();
-           return connection.Query<Item>(GetItemsSp, commandType: CommandType.StoredProcedure).ToList();
+           return connection.Query<Item>(GetItemsSp, commandType: CommandType.StoredProcedure,
+               param: new
+               {
+                   codeFilter = options.CodeFilter,
+                   valueFilter = options.ValueFilter,
+                   offset = (options.Page - 1) * options.PageSize,
+                   pageSize = options.PageSize,
+               } ).ToList();
         }
     }
 }

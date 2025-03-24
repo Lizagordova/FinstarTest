@@ -1,4 +1,5 @@
-﻿import {useEffect, useState} from "react";
+﻿import { useState} from "react";
+import {Alert, Button, Container, Grid, TextField} from "@mui/material";
 
 const defaultData = {
     1: "value1",
@@ -8,11 +9,11 @@ const defaultData = {
 
 const DataUploader = () => {
     const [jsonData, setJsonData] = useState(JSON.stringify(defaultData));
-
-  //  const [message, setMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [message, setMessage] = useState<string | null>(null);
     const uploadData = () => {
         const data = JSON.parse(jsonData);
-        console.log('data',data);
+            //todo: вынести адрес куда-нибудь
         fetch('https://localhost:44302/api/v1/save', {
             method: 'POST',
             headers: {
@@ -20,26 +21,42 @@ const DataUploader = () => {
             },
             body: JSON.stringify({Data: data})
         }).then(() => {
-            //todo: добавить обработку ошибок что setMessage 
-        });
+            setMessage('Данные успешно загружены')
+        }).catch(err => setErrorMessage('Ошибка'));
+    };
+    
+    const handleChange = (value: string) => {
+        setErrorMessage(null);
+        setJsonData(value);
     };
 
     return (
-        <div>
-            <h3>Загрузить данные</h3>
-            <form onSubmit={uploadData}>
-                <textarea
-                    value={jsonData}
-                    rows={5}
-                    cols={50}
-                    required
-                    onChange={(e) => setJsonData(e.target.value)}
+        <Grid container spacing={2}>
+            <Grid item xs={12}>
+                <TextField
+                    id="outlined-multiline-static"
+                    label="Введите данные"
+                    multiline
+                    rows={4}
+                    defaultValue={jsonData}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                    onChange={(e) => handleChange(e.target.value)}
                 />
-                <button type="submit">Загрузить</button>
-            </form>
-            <input type="number" id="codeFilter" placeholder="Filter by Code"/>
-        </div>
-    )
+            </Grid>
+            <Grid item xs={12}>
+                <Button
+                    onClick={uploadData}
+                    variant="contained">
+                    Загрузить
+                </Button>
+            </Grid>
+            <Grid item xs={12}>
+                {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+                {message && <Alert severity="success">{message}</Alert>}
+            </Grid>
+        </Grid>
+    );
 }
 
 export default DataUploader;

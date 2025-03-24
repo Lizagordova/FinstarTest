@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Finstar.Domain.Models;
 using Finstar.Services;
@@ -38,13 +39,30 @@ namespace FinstarTest.Controllers
             return Ok();
         }
 
-        [HttpGet(Name = "get")]
+        [HttpGet]
+        [Route("get")]
         public ActionResult<GetItemsResponse> Get([FromQuery]GetListRequest request)
         {
             var options = _mapper.Map<ItemQueryOptions>(request);
-            return new GetItemsResponse {Items = _itemsReader.GetItems(options).ToList()};
+            var response = new GetItemsResponse {Items = _itemsReader.GetItems(options).ToList()};
+            return new ActionResult<GetItemsResponse>(response);
             //todo: добавить обработку ошибку
             //todo: добавит проверку входных данных
+        }
+        
+        [HttpGet]
+        [Route("get1")]
+        public ActionResult<GetItemsResponse> Get([FromQuery]int? codeFilter, [FromQuery]string? valueFilter)
+        {
+            return new GetItemsResponse
+            {
+                Items = new List<Item>
+                {
+                    new Item {Id = 1, Code = 10, Value = "155"},
+                    new Item {Id = 2, Code = 19, Value = "222"},
+                    new Item {Id = 3, Code = 15, Value = "333"},
+                }
+            };
         }
     }
 }
