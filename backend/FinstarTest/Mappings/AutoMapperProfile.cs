@@ -10,7 +10,7 @@ namespace FinstarTest.Mappings
         {
             CreateMap<GetListRequest, ItemQueryOptions>()
                 .ForMember(dest => dest.Page, src => src.MapFrom(opt => opt.Page ?? 1))
-                .ForMember(dest => dest.PageSize, src => src.MapFrom(opt => opt.Page ?? 10));
+                .ForMember(dest => dest.PageSize, src => src.MapFrom(opt => opt.PageSize ?? 10));
         }
     }
 }

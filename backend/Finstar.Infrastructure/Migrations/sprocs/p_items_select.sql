@@ -18,6 +18,8 @@ BEGIN
 	FETCH NEXT @pageSize ROWS ONLY;
 
     SELECT COUNT(*)
-    FROM [items];
+    FROM [items]
+    WHERE ((@codeFilter IS NULL) OR ([code] = @codeFilter)) AND
+    ((@valueFilter IS NULL) OR ([value] = @valueFilter))
 END
 GO

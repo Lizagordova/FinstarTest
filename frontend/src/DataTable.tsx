@@ -22,13 +22,15 @@ const DataTable = () => {
     const[codeFilter, setCodeFilter] = useState<string | null>('');
     const[valueFilter, setValueFilter] = useState<string | null >('');
     const [error, setError] = useState<string | null>(null);
-    const [page, setPage] = useState<any>(0);
+    const [page, setPage] = useState<any>(1);
     const [pageSize, setPageSize] = useState<any>(5);
     
     const getItems = () => {
         const params = new URLSearchParams();
         if (codeFilter) params.append('codeFilter', codeFilter);
         if (valueFilter) params.append('valueFilter', valueFilter);
+        params.append('page', page);
+        params.append('pageSize', pageSize);
         fetch(`https://localhost:44302/api/v1/get?${params.toString()}`)
             .then(response => {
                 if (!response.ok) {
