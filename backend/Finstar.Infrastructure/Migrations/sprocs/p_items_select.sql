@@ -15,6 +15,9 @@ BEGIN
 		((@valueFilter IS NULL) OR ([value] = @valueFilter))
 	ORDER BY [id]
 	OFFSET @offset ROWS
-	FETCH NEXT @pageSize ROWS ONLY
+	FETCH NEXT @pageSize ROWS ONLY;
+
+    SELECT COUNT(*)
+    FROM [items];
 END
 GO

@@ -6,15 +6,24 @@ using Finstar.Domain;
 using Finstar.Domain.Models;
 using Finstar.Infrastructure.Helpers;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 namespace Finstar.Infrastructure
 {
     public class ItemsRepository : IItemsRepository
     {
-        //todo: считать из json
-        private const string ConnectionString = "Data Source=localhost;Initial Catalog=Finstar;Connect Timeout=5;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;Integrated Security=True";
         private const string ItemsInsertSp = "p_items_insert";
         private const string GetItemsSp = "p_items_select";
+
+        private IConfiguration _configuration;
+        private readonly string ConnectionString;
+        public ItemsRepository(IConfiguration configuration)
+        {
+            _configuration = configuration;
+            ConnectionString = _configuration.GetConnectionString("Finstar") ?? "";
+        }
+
+        // todo: добавить асинхронность и обработку исключений
         public void SaveItems(IEnumerable<Item> items)
         {
             using var connection =
@@ -26,19 +35,26 @@ namespace Finstar.Infrastructure
             } );
         }
 
-        public IList<Item> GetItems(ItemQueryOptions options)
+        public PagingModel<Item> GetItems(ItemQueryOptions options)
         {
             using var connection =
                 new SqlConnection(ConnectionString);
             connection.Open();
-           return connection.Query<Item>(GetItemsSp, commandType: CommandType.StoredProcedure,
+           var result = connection.QueryMultiple(GetItemsSp, commandType: CommandType.StoredProcedure,
                param: new
                {
                    codeFilter = options.CodeFilter,
                    valueFilter = options.ValueFilter,
                    offset = (options.Page - 1) * options.PageSize,
                    pageSize = options.PageSize,
-               } ).ToList();
+               });
+           return new PagingModel<Item>
+           {
+               Items = result.Read<Item>().ToList(),
+               TotalCount = result.ReadSingle<int>(),
+               Page = options.Page,
+               PageSize = options.PageSize
+           };
         }
     }
 }

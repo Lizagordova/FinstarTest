@@ -13,7 +13,7 @@ namespace Finstar.Services
             _itemsRepository = itemsRepository;
         }
 
-        public IList<Item> GetItems(ItemQueryOptions options)
+        public PagingModel<Item>  GetItems(ItemQueryOptions options)
         {
             return _itemsRepository.GetItems(options);
         }

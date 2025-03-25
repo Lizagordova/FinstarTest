@@ -44,25 +44,11 @@ namespace FinstarTest.Controllers
         public ActionResult<GetItemsResponse> Get([FromQuery]GetListRequest request)
         {
             var options = _mapper.Map<ItemQueryOptions>(request);
-            var response = new GetItemsResponse {Items = _itemsReader.GetItems(options).ToList()};
+            var result = _itemsReader.GetItems(options);
+            var response = new GetItemsResponse {Items =  result.Items.ToList(), TotalCount = result.TotalCount };
             return new ActionResult<GetItemsResponse>(response);
             //todo: добавить обработку ошибку
             //todo: добавит проверку входных данных
-        }
-        
-        [HttpGet]
-        [Route("get1")]
-        public ActionResult<GetItemsResponse> Get([FromQuery]int? codeFilter, [FromQuery]string? valueFilter)
-        {
-            return new GetItemsResponse
-            {
-                Items = new List<Item>
-                {
-                    new Item {Id = 1, Code = 10, Value = "155"},
-                    new Item {Id = 2, Code = 19, Value = "222"},
-                    new Item {Id = 3, Code = 15, Value = "333"},
-                }
-            };
         }
     }
 }

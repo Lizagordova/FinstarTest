@@ -5,6 +5,6 @@ namespace Finstar.Services
 {
     public interface IItemsReaderService
     {
-        IList<Item> GetItems(ItemQueryOptions options);
+        PagingModel<Item> GetItems(ItemQueryOptions options);
     }
 }

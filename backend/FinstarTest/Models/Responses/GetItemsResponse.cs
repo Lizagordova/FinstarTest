@@ -6,5 +6,6 @@ namespace FinstarTest.Models.Responses
     public class GetItemsResponse
     {
         public List<Item> Items { get; set; }
+        public int TotalCount { get; set; }
     }
 }
