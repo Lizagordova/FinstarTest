@@ -78,8 +78,8 @@ const DataTable = () => {
                     Ошибка: {error}
                 </Box>
             )}
-            {!error && (
-                <div style={{ height: 600, width: '100%' }}>
+            {!error && items && (
+                <div style={{ height: '50%', width: '100%' }}>
                     <DataGrid
                         rows={items}
                         columns={columns}
