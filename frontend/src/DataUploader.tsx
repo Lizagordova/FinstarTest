@@ -1,5 +1,6 @@
 ﻿import { useState} from "react";
 import {Alert, Button, Container, Grid, TextField} from "@mui/material";
+import {BackendUrl} from "./constants";
 
 const defaultData = {
     1: "value1",
@@ -13,8 +14,7 @@ const DataUploader = () => {
     const [message, setMessage] = useState<string | null>(null);
     const uploadData = () => {
         const data = JSON.parse(jsonData);
-            //todo: вынести адрес куда-нибудь
-        fetch('https://localhost:44302/api/v1/save', {
+        fetch(`${BackendUrl}/api/v1/save`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

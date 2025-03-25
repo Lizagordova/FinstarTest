@@ -5,6 +5,7 @@ import {
     TextField,
     Button, TablePagination, TableContainer, TableHead, Table, TableRow, TableCell, TableBody
 } from "@mui/material";
+import {BackendUrl} from "./constants";
 
 type Item = {
     id: number;
@@ -27,7 +28,7 @@ const DataTable = () => {
         if (valueFilter) params.append('valueFilter', valueFilter);
         params.append('page', page);
         params.append('pageSize', pageSize);
-        fetch(`https://localhost:44302/api/v1/get?${params.toString()}`)
+        fetch(`${BackendUrl}/api/v1/get?${params.toString()}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Ошибка запроса');
@@ -56,7 +57,7 @@ const DataTable = () => {
     }, [page, pageSize]);
 
     return (
-        <Paper sx={{ p: 2}}>
+        <Paper sx={{ p: 2 }}>
             <Box sx={{ mb: 2 }}>
                 <Box display="flex" gap={2}>
                     <TextField
