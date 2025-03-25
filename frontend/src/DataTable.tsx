@@ -1,10 +1,9 @@
-﻿import {useEffect, useState} from "react";
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+﻿import {ChangeEvent, useEffect, useState} from "react";
 import {
     Paper,
     Box,
     TextField,
-    Button,
+    Button, TablePagination, TableContainer, TableHead, Table, TableRow, TableCell, TableBody
 } from "@mui/material";
 
 type Item = {
@@ -12,13 +11,10 @@ type Item = {
     code: number;
     value: string;
 }
-const columns: GridColDef[] = [
-    { field: 'id', headerName: '№', width: 70 },
-    { field: 'code', headerName: 'Код', width: 130 },
-    { field: 'value', headerName: 'Значение', flex: 1 },
-];
+
 const DataTable = () => {
     const [items, setItems] = useState<Item[]>([]);
+    const [totalCount, setTotalCount] = useState<number>(0);
     const[codeFilter, setCodeFilter] = useState<string | null>('');
     const[valueFilter, setValueFilter] = useState<string | null >('');
     const [error, setError] = useState<string | null>(null);
@@ -40,14 +36,27 @@ const DataTable = () => {
             })
             .then(data => {
                 setItems(data.items);
+                setTotalCount(data.totalCount);
             })
             .catch(error => console.error('Ошибка:', error));
     }
+    
+    const handleChangePageSize = (event: ChangeEvent<HTMLInputElement>) => {
+        setPageSize(parseInt(event.target.value, 10));
+        getItems();
+    }
+
+    const handleChangePage =  (event: unknown, newPage: number)  => {
+        setPage(newPage);
+        getItems();
+    }
+    
     useEffect(() => {
-       // getItems();
-    }, [items]);
+        getItems();
+    }, [page, pageSize]);
+
     return (
-        <Paper sx={{ p: 2, height: '100%' }}>
+        <Paper sx={{ p: 2}}>
             <Box sx={{ mb: 2 }}>
                 <Box display="flex" gap={2}>
                     <TextField
@@ -72,26 +81,40 @@ const DataTable = () => {
                     </Button>
                 </Box>
             </Box>
+            <TableContainer sx={{ maxHeight: '400px', overflow: 'auto' }}>
+                <Table stickyHeader >
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>id</TableCell>
+                            <TableCell>code</TableCell>
+                            <TableCell>value</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {items.map(item => (
+                            <TableRow key={item.id}>
+                                <TableCell>{item.id}</TableCell>
+                                <TableCell>{item.code}</TableCell>
+                                <TableCell>{item.value}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={totalCount}
+                rowsPerPage={pageSize}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangePageSize}
+            />
 
             {error && (
                 <Box sx={{ color: 'error.main', p: 2 }}>
                     Ошибка: {error}
                 </Box>
-            )}
-            {!error && items && (
-                <div style={{ height: '50%', width: '100%' }}>
-                    <DataGrid
-                        rows={items}
-                        columns={columns}
-                        //@ts-ignore
-                        page={page}
-                        onPageChange={(newPage: any) => setPage(newPage)}
-                        pageSize={pageSize}
-                        onPageSizeChange={(newPageSize: any) => setPageSize(newPageSize)}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        pagination
-                    />
-                </div>
             )}
         </Paper>
     )
