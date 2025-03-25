@@ -20,6 +20,6 @@ BEGIN
     SELECT COUNT(*)
     FROM [items]
     WHERE ((@codeFilter IS NULL) OR ([code] = @codeFilter)) AND
-    ((@valueFilter IS NULL) OR ([value] = @valueFilter))
+    ((@valueFilter IS NULL) OR ([value] = @valueFilter)) 
 END
 GO
