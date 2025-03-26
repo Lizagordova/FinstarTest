@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Finstar.Services
 {
     public interface IItemsEditorService
     {
-        void SaveItems(Dictionary<int, string> items);
+        Task SaveItemsAsync(Dictionary<int, string> items);
     }
 }

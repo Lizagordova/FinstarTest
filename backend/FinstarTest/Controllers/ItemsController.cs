@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using AutoMapper;
 using Finstar.Domain.Models;
 using Finstar.Services;
@@ -32,14 +33,14 @@ namespace FinstarTest.Controllers
 
         [HttpPost]
         [Route("save")]
-        public IActionResult SaveItems([FromBody] SaveItemsRequest request)
+        public async Task<IActionResult> SaveItems([FromBody] SaveItemsRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
             try
             {
-                _itemsEditor.SaveItems(request.Data);
+                await _itemsEditor.SaveItemsAsync(request.Data);
                 return Ok();
             }
             catch (Exception e)
@@ -51,12 +52,12 @@ namespace FinstarTest.Controllers
 
         [HttpGet]
         [Route("get")]
-        public ActionResult<GetItemsResponse> Get([FromQuery]GetListRequest request)
+        public async Task<ActionResult<GetItemsResponse>> Get([FromQuery]GetListRequest request)
         {
             try
             {
                 var options = _mapper.Map<ItemQueryOptions>(request);
-                var result = _itemsReader.GetItems(options);
+                var result = await _itemsReader.GetItemsAsync(options);
                 var response = new GetItemsResponse {Items =  result.Items.ToList(), TotalCount = result.TotalCount };
                 return new ActionResult<GetItemsResponse>(response);
             }

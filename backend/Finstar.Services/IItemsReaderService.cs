@@ -1,9 +1,10 @@
-﻿using Finstar.Domain.Models;
+﻿using System.Threading.Tasks;
+using Finstar.Domain.Models;
 
 namespace Finstar.Services
 {
     public interface IItemsReaderService
     {
-        PagingModel<Item> GetItems(ItemQueryOptions options);
+        Task<PagingModel<Item>>GetItemsAsync(ItemQueryOptions options);
     }
 }

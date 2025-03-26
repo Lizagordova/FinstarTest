@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using Dapper;
 using Finstar.Domain;
 using Finstar.Domain.Models;
@@ -23,38 +24,37 @@ namespace Finstar.Infrastructure
             ConnectionString = _configuration.GetConnectionString("Finstar") ?? "";
         }
 
-        // todo: добавить асинхронность и обработку исключений
-        public void SaveItems(IEnumerable<Item> items)
+        public async Task SaveItemsAsync(IEnumerable<Item> items)
         {
             using var connection =
                 new SqlConnection(ConnectionString);
-            connection.Open();
-            connection.Execute(ItemsInsertSp, commandType: CommandType.StoredProcedure, param: new
+            await connection.OpenAsync();
+            await connection.ExecuteAsync(ItemsInsertSp, commandType: CommandType.StoredProcedure, param: new
             {
                 items = ParamHelper.GetItemsParam(items)
             } );
         }
 
-        public PagingModel<Item> GetItems(ItemQueryOptions options)
+        public async Task<PagingModel<Item>> GetItemsAsync(ItemQueryOptions options)
         {
             using var connection =
                 new SqlConnection(ConnectionString);
-            connection.Open();
-           var result = connection.QueryMultiple(GetItemsSp, commandType: CommandType.StoredProcedure,
-               param: new
-               {
-                   codeFilter = options.CodeFilter,
-                   valueFilter = options.ValueFilter,
-                   offset = (options.Page - 1) * options.PageSize,
-                   pageSize = options.PageSize,
-               });
-           return new PagingModel<Item>
-           {
-               Items = result.Read<Item>().ToList(),
-               TotalCount = result.ReadSingle<int>(),
-               Page = options.Page,
-               PageSize = options.PageSize
-           };
+            await connection.OpenAsync();
+            var result = await connection.QueryMultipleAsync(GetItemsSp, commandType: CommandType.StoredProcedure,
+                param: new
+                {
+                    codeFilter = options.CodeFilter,
+                    valueFilter = options.ValueFilter,
+                    offset = (options.Page - 1) * options.PageSize,
+                    pageSize = options.PageSize,
+                });
+            return new PagingModel<Item>
+            {
+                Items = result.Read<Item>().ToList(),
+                TotalCount = result.ReadSingle<int>(),
+                Page = options.Page,
+                PageSize = options.PageSize
+            };
         }
     }
 }

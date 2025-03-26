@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Finstar.Domain.Models;
 
 namespace Finstar.Domain
 {
     public interface IItemsRepository
     {
-        public void SaveItems(IEnumerable<Item> items);
-        public PagingModel<Item> GetItems(ItemQueryOptions options);
+        public Task SaveItemsAsync(IEnumerable<Item> items);
+        public Task<PagingModel<Item>> GetItemsAsync(ItemQueryOptions options);
     }
 }

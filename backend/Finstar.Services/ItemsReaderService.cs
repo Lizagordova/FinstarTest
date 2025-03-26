@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Finstar.Domain;
 using Finstar.Domain.Models;
 
@@ -13,9 +14,9 @@ namespace Finstar.Services
             _itemsRepository = itemsRepository;
         }
 
-        public PagingModel<Item>  GetItems(ItemQueryOptions options)
+        public async Task<PagingModel<Item>> GetItemsAsync(ItemQueryOptions options)
         {
-            return _itemsRepository.GetItems(options);
+            return await _itemsRepository.GetItemsAsync(options);
         }
     }
 }

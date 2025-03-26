@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Finstar.Domain;
 using Finstar.Domain.Models;
 
@@ -15,7 +15,7 @@ namespace Finstar.Services
             _itemsRepository = itemsRepository;
         }
 
-        public void SaveItems(Dictionary<int, string> items)
+        public async Task SaveItemsAsync(Dictionary<int, string> items)
         {
             var sortedDict = items.OrderBy(pair => pair.Key);
             var itemList = sortedDict.Select((pair, index) => new Item
@@ -24,7 +24,7 @@ namespace Finstar.Services
                 Code = pair.Key,
                 Value = pair.Value
             });
-            _itemsRepository.SaveItems(itemList);
+            await _itemsRepository.SaveItemsAsync(itemList);
         }
     }
 }
