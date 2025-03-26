@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using AutoMapper;
 using Finstar.Domain.Models;
 using Finstar.Services;
@@ -34,21 +36,35 @@ namespace FinstarTest.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-            
-            _itemsEditor.SaveItems(request.Data);
-            return Ok();
+
+            try
+            {
+                _itemsEditor.SaveItems(request.Data);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Ошибка при сохранении данных. error: {e.Message}");
+                return StatusCode((int)HttpStatusCode.InternalServerError, "Внутренняя ошибка сервера");
+            }
         }
 
         [HttpGet]
         [Route("get")]
         public ActionResult<GetItemsResponse> Get([FromQuery]GetListRequest request)
         {
-            var options = _mapper.Map<ItemQueryOptions>(request);
-            var result = _itemsReader.GetItems(options);
-            var response = new GetItemsResponse {Items =  result.Items.ToList(), TotalCount = result.TotalCount };
-            return new ActionResult<GetItemsResponse>(response);
-            //todo: добавить обработку ошибку
-            //todo: добавит проверку входных данных
+            try
+            {
+                var options = _mapper.Map<ItemQueryOptions>(request);
+                var result = _itemsReader.GetItems(options);
+                var response = new GetItemsResponse {Items =  result.Items.ToList(), TotalCount = result.TotalCount };
+                return new ActionResult<GetItemsResponse>(response);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Ошибка при получении данных. error: {e.Message}");
+                 return StatusCode((int)HttpStatusCode.InternalServerError, "Внутренняя ошибка сервера");
+            }
         }
     }
 }
